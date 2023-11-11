@@ -1,0 +1,79 @@
+#checking cost and calories for breads
+SELECT	*,
+			 price / unifying_serving_size AS price_per_gram
+  FROM	(
+			SELECT	*
+						,CASE WHEN category = 'NULL' THEN 'Snacks and Chips' ELSE category END AS new_category
+						,CASE WHEN category IN ('NULL', 'Beer', 'Wine') THEN price * 100 ELSE price END AS new_price
+						,CASE 
+							WHEN servingsizeunits = 'lb' THEN servingsize * 454 # 1 lb = 454 grams
+							WHEN servingsizeunits = 'ml' THEN servingsize * 1 # 1ml = 1 gram
+							WHEN servingsizeunits = 'grams' THEN servingsize
+							WHEN servingsizeunits = 'oz' THEN servingsize * 28.4 # 1oz = 28.4 grams
+							WHEN totalsizeunits = 'fl oz' THEN servingsize * 28.4 
+							WHEN totalsizeunits = 'oz' THEN servingsize * 28.4 
+							WHEN totalsizeunits = 'NULL' AND category = 'NULL' THEN servingsize
+							WHEN servingsizeunits = 'g' THEN servingsize
+							WHEN totalsizeunits = 'NULL' AND category = 'Beer' THEN servingsize * 28.4
+							WHEN totalsizeunits = 'NULL' AND category = 'Wine' THEN 5 * 28.4 # american standard 1 class of wine size
+							WHEN servingsizeunits = 'unit' THEN servingsize # 1 unit = 1 gram. 
+							END AS unifying_serving_size
+			  FROM	fmban_data
+			) AS SUB_QUERY
+ WHERE	 subcategory like '%bread%' 
+ ;
+ 
+ 
+ #comparing cost and calories for bread vs tortillas
+
+SELECT	*,
+			 price / unifying_serving_size AS price_per_gram
+  FROM	(
+			SELECT	*
+						,CASE WHEN category = 'NULL' THEN 'Snacks and Chips' ELSE category END AS new_category
+						,CASE WHEN category IN ('NULL', 'Beer', 'Wine') THEN price * 100 ELSE price END AS new_price
+						,CASE 
+							WHEN servingsizeunits = 'lb' THEN servingsize * 454 # 1 lb = 454 grams
+							WHEN servingsizeunits = 'ml' THEN servingsize * 1 # 1ml = 1 gram
+							WHEN servingsizeunits = 'grams' THEN servingsize
+							WHEN servingsizeunits = 'oz' THEN servingsize * 28.4 # 1oz = 28.4 grams
+							WHEN totalsizeunits = 'fl oz' THEN servingsize * 28.4 
+							WHEN totalsizeunits = 'oz' THEN servingsize * 28.4 
+							WHEN totalsizeunits = 'NULL' AND category = 'NULL' THEN servingsize
+							WHEN servingsizeunits = 'g' THEN servingsize
+							WHEN totalsizeunits = 'NULL' AND category = 'Beer' THEN servingsize * 28.4
+							WHEN totalsizeunits = 'NULL' AND category = 'Wine' THEN 5 * 28.4 # american standard 1 class of wine size
+							WHEN servingsizeunits = 'unit' THEN servingsize # 1 unit = 1 gram. 
+							END AS unifying_serving_size
+			  FROM	fmban_data
+			) AS SUB_QUERY
+ WHERE	 subcategory like '%bread%' or subcategory like '%tortilla%'
+ 
+ ;
+ 
+ 
+ #comparing cost and calories for breads vs tortillas with dairy free
+
+SELECT	*,
+			 price / unifying_serving_size AS price_per_gram
+  FROM	(
+			SELECT	*
+						,CASE WHEN category = 'NULL' THEN 'Snacks and Chips' ELSE category END AS new_category
+						,CASE WHEN category IN ('NULL', 'Beer', 'Wine') THEN price * 100 ELSE price END AS new_price
+						,CASE 
+							WHEN servingsizeunits = 'lb' THEN servingsize * 454 # 1 lb = 454 grams
+							WHEN servingsizeunits = 'ml' THEN servingsize * 1 # 1ml = 1 gram
+							WHEN servingsizeunits = 'grams' THEN servingsize
+							WHEN servingsizeunits = 'oz' THEN servingsize * 28.4 # 1oz = 28.4 grams
+							WHEN totalsizeunits = 'fl oz' THEN servingsize * 28.4 
+							WHEN totalsizeunits = 'oz' THEN servingsize * 28.4 
+							WHEN totalsizeunits = 'NULL' AND category = 'NULL' THEN servingsize
+							WHEN servingsizeunits = 'g' THEN servingsize
+							WHEN totalsizeunits = 'NULL' AND category = 'Beer' THEN servingsize * 28.4
+							WHEN totalsizeunits = 'NULL' AND category = 'Wine' THEN 5 * 28.4 # american standard 1 class of wine size
+							WHEN servingsizeunits = 'unit' THEN servingsize # 1 unit = 1 gram. 
+							END AS unifying_serving_size
+			  FROM	fmban_data
+			) AS SUB_QUERY
+ WHERE	 subcategory like '%bread%' or subcategory like '%tortilla%' AND dairyfree=1
+ ;
